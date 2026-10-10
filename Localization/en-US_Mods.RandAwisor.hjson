@@ -2,6 +2,21 @@
 # Please read https://github.com/tModLoader/tModLoader/wiki/Localization to learn more about localization and these files.
 
 Items: {
+	DirtBreastplate: {
+		DisplayName: Dirt Breastplate
+		Tooltip: Smells like a rainy day.
+	}
+
+	DirtHelmet: {
+		DisplayName: Dirt Helmet
+		Tooltip: Keeps your head grounded.
+	}
+
+	DirtLeggings: {
+		DisplayName: Dirt Leggings
+		Tooltip: A little itchy.
+	}
+
 	DirtSword: {
 		DisplayName: Dirt Sword
 		Tooltip: Made from 100% organic dirt.
