@@ -18,3 +18,17 @@ RandAwisor ("Randomizer Awisor") is a Terraria mod built on tModLoader (C#, .NET
 - **Autoloading:** tModLoader finds content by reflection. Any public subclass of a content type (`ModItem`, `ModNPC`, `ModPlayer`, `ModSystem`, etc.) in the assembly is registered automatically, so nothing needs a manual registration list. A content class's texture is the `.png` at the same namespace path as the class (for example, `RandAwisor.Content.Items.Foo` loads `Content/Items/Foo.png`).
 - **Localization:** `Localization/en-US_Mods.RandAwisor.hjson` gets entries for new content added to it automatically after a build and reload in game. Edit the values tModLoader generates there instead of hardcoding display names or tooltips in C#.
 - **Ignored files:** `bin/` and `obj/` are build output and are listed in `.gitignore`.
+
+## ExampleMod reference
+
+The official tModLoader ExampleMod (a Steam Workshop download) is kept in this folder as reference material. When you need to see how a tModLoader API is used, look it up here before guessing.
+
+- **`ExampleModSource/`:** source extracted from `ExampleMod.tmod`. It has the full C# code (`Content/`, `Common/`), `README.md`, and the localization files. The localization files were renamed `*.hjson.txt` so tModLoader's localization updater never treats them as RandAwisor's own files. Images and audio were not extracted.
+- **`ExampleMod.tmod`, `Workshop/`, `enabled.json`, `publish.vdf`:** the raw download (`Workshop/` holds one `.tmod` per tModLoader version).
+
+None of these are part of the mod, and three places keep them out:
+- `.gitignore` excludes them from git.
+- `<Compile Remove="ExampleModSource\**" />` in the `.csproj` keeps their C# out of RandAwisor's assembly. Without it, the build compiles ExampleMod's code into this mod.
+- `buildIgnore` in `build.txt` keeps them out of the packaged `.tmod`.
+
+Keep all three in sync if you add more reference material.

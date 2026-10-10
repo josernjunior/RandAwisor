@@ -10,7 +10,12 @@
 
 	<!-- References -->
 	<ItemGroup>
-		
+
+	</ItemGroup>
+
+	<!-- ExampleModSource is extracted reference code, not part of this mod -->
+	<ItemGroup>
+		<Compile Remove="ExampleModSource\**" />
 	</ItemGroup>
 
 </Project>

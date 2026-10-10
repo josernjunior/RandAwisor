@@ -2,3 +2,10 @@ bin/
 obj/
 .vs/
 *.user
+
+# ExampleMod (Steam Workshop download) kept locally as reference material
+ExampleMod.tmod
+ExampleModSource/
+Workshop/
+enabled.json
+publish.vdf
