@@ -30,6 +30,7 @@ Configs: {
 		Headers: {
 			Behavior: NPC behavior
 			AIStyles: AI styles
+			AdditionalAIs: Additional AIs
 		}
 
 		AIMode: {
@@ -68,6 +69,21 @@ Configs: {
 
 		AIStyles: {
 			Label: Enabled AI styles
+			Tooltip: A disabled AI is never handed out; an NPC that would get it takes the seed's next draw instead.
+		}
+
+		EnableAdditionalAIs: {
+			Label: Use additional AIs
+			Tooltip: The mod's own 50 behaviors join the draw alongside the game's AIs.
+		}
+
+		AdditionalAIChance: {
+			Label: Additional AI chance (%)
+			Tooltip: Share of draws that pick one of the additional AIs instead of one of the game's.
+		}
+
+		AdditionalAIs: {
+			Label: Enabled additional AIs
 			Tooltip: A disabled AI is never handed out; an NPC that would get it takes the seed's next draw instead.
 		}
 	}
@@ -248,6 +264,266 @@ Configs: {
 		Seahorse: {
 			Label: Seahorse
 			Tooltip: ""
+		}
+	}
+
+	AdditionalAIToggles: {
+		Tooltip: ""
+
+		Headers: {
+			Ground: Ground
+			Flying: Flying
+			Shooters: Shooters (only hostile NPCs shoot)
+		}
+
+		Flea: {
+			Label: Flea
+			Tooltip: Tiny nonstop hops toward you.
+		}
+
+		Kangaroo: {
+			Label: Kangaroo
+			Tooltip: Rests, then takes a long leap toward you.
+		}
+
+		Coward: {
+			Label: Coward
+			Tooltip: Runs away from you.
+		}
+
+		Patrol: {
+			Label: Patrol
+			Tooltip: Paces back and forth around where it spawned and ignores you.
+		}
+
+		Ram: {
+			Label: Ram
+			Tooltip: Winds up, charges in a straight line, then catches its breath.
+		}
+
+		Sleepwalker: {
+			Label: Sleepwalker
+			Tooltip: Shuffles slowly in one direction and turns at walls.
+		}
+
+		Shy: {
+			Label: Shy
+			Tooltip: Creeps closer only while you look away, and freezes when watched.
+		}
+
+		Mirror: {
+			Label: Mirror
+			Tooltip: Moves opposite to you and jumps when you jump.
+		}
+
+		Shadow: {
+			Label: Shadow
+			Tooltip: Copies your movement.
+		}
+
+		Bouncer: {
+			Label: Bouncer
+			Tooltip: Bounces like a rubber ball, reversing at walls.
+		}
+
+		Boulder: {
+			Label: Boulder
+			Tooltip: Builds up speed like a rolling boulder and overshoots.
+		}
+
+		Dizzy: {
+			Label: Dizzy
+			Tooltip: Stumbles toward you, sometimes the wrong way.
+		}
+
+		Sloth: {
+			Label: Sloth
+			Tooltip: Barely moves.
+		}
+
+		Skater: {
+			Label: Skater
+			Tooltip: Pushes off and glides without friction, like on ice.
+		}
+
+		Lunar: {
+			Label: Lunar
+			Tooltip: Floaty low-gravity jumps.
+		}
+
+		Anvil: {
+			Label: Anvil
+			Tooltip: Leaps high when close and slams down hard.
+		}
+
+		Ceiling: {
+			Label: Ceiling
+			Tooltip: Falls upward and walks on ceilings.
+		}
+
+		Gecko: {
+			Label: Gecko
+			Tooltip: Climbs straight up walls.
+		}
+
+		Parachute: {
+			Label: Parachute
+			Tooltip: Springs into the air, then floats down toward you.
+		}
+
+		Clockwork: {
+			Label: Clockwork
+			Tooltip: Moves in stiff steps: walks a beat, stops a beat.
+		}
+
+		Grudge: {
+			Label: Grudge
+			Tooltip: Wanders peacefully until hurt, then hunts you down.
+		}
+
+		Skittish: {
+			Label: Skittish
+			Tooltip: Chases you, but runs away once below half health.
+		}
+
+		Glitch: {
+			Label: Glitch
+			Tooltip: Walks toward you and keeps skipping a few tiles at random.
+		}
+
+		Chameleon: {
+			Label: Chameleon
+			Tooltip: Stalks you, nearly invisible until close.
+		}
+
+		Orbit: {
+			Label: Orbit
+			Tooltip: Circles around you.
+		}
+
+		Spiral: {
+			Label: Spiral
+			Tooltip: Circles you while drifting in and out.
+		}
+
+		Zigzag: {
+			Label: Zigzag
+			Tooltip: Approaches swerving side to side.
+		}
+
+		Diver: {
+			Label: Diver
+			Tooltip: Hovers above you, dives straight down, then climbs back.
+		}
+
+		Hummingbird: {
+			Label: Hummingbird
+			Tooltip: Darts to random spots near you and pauses.
+		}
+
+		Haunt: {
+			Label: Haunt
+			Tooltip: Drifts slowly through walls, fading out when far away.
+		}
+
+		Blink: {
+			Label: Blink
+			Tooltip: Teleports next to you every few seconds.
+		}
+
+		Magnet: {
+			Label: Magnet
+			Tooltip: Pulled toward you with no brakes, so it keeps overshooting.
+		}
+
+		Spring: {
+			Label: Spring
+			Tooltip: Bobs on an invisible spring above you.
+		}
+
+		Pendulum: {
+			Label: Pendulum
+			Tooltip: Swings back and forth where it spawned and ignores you.
+		}
+
+		Wave: {
+			Label: Wave
+			Tooltip: Sweeps past you in a sine wave.
+		}
+
+		Boomerang: {
+			Label: Boomerang
+			Tooltip: Spins out toward you and flies back to where it spawned.
+		}
+
+		Swarm: {
+			Label: Swarm
+			Tooltip: Buzzes around you in jittery bursts.
+		}
+
+		Kite: {
+			Label: Kite
+			Tooltip: Floats high above you, trailing behind and swaying.
+		}
+
+		Comet: {
+			Label: Comet
+			Tooltip: Streaks across your area in straight lines.
+		}
+
+		Whirlwind: {
+			Label: Whirlwind
+			Tooltip: Spirals in on you, faster and tighter.
+		}
+
+		FigureEight: {
+			Label: Figure Eight
+			Tooltip: Traces a figure eight around you.
+		}
+
+		Tick: {
+			Label: Tick
+			Tooltip: Latches onto you for a couple of seconds.
+		}
+
+		Rocket: {
+			Label: Rocket
+			Tooltip: Shoots up high, then homes in on you from above.
+		}
+
+		Knight: {
+			Label: Knight
+			Tooltip: Moves only in chess-knight L jumps.
+		}
+
+		Sentinel: {
+			Label: Sentinel
+			Tooltip: Hovers in place and fires lasers when it can see you.
+		}
+
+		Turret: {
+			Label: Turret
+			Tooltip: Plants itself and fires three-shot laser bursts.
+		}
+
+		Mortar: {
+			Label: Mortar
+			Tooltip: Keeps its distance and lobs snowballs at you.
+		}
+
+		Fan: {
+			Label: Fan
+			Tooltip: Flies at a distance and fires a spread of stingers.
+		}
+
+		Urchin: {
+			Label: Urchin
+			Tooltip: Sits still and sprays stingers in eight directions.
+		}
+
+		Sniper: {
+			Label: Sniper
+			Tooltip: Keeps far away, shows its aim, then fires one fast laser.
 		}
 	}
 

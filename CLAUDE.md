@@ -21,20 +21,29 @@ RandAwisor ("Randomizer Awisor") is a Terraria mod built on tModLoader (C#, .NET
 
 ## AI randomizer
 
-This is the mod's main feature. Each vanilla NPC runs another vanilla NPC's AI instead of its own. It lives in `Common/AIRandomizer/` and is configured by `Common/Configs/RandomizerConfig.cs`, a server-side `ModConfig` with:
+This is the mod's main feature. Each vanilla NPC runs another behavior instead of its own AI: either another vanilla NPC's AI, or one of the mod's 50 additional AIs. It lives in `Common/AIRandomizer/` and is configured by `Common/Configs/RandomizerConfig.cs`, a server-side `ModConfig` with:
 - three modes (Off / ShuffleByType / RandomPerNPC);
 - a seed field (text; empty means the world seed; non-numeric text is hashed with FNV-1a because `string.GetHashCode` changes every launch);
 - a toggle each for enemies, town NPCs and critters;
-- a subpage of per-AI-style toggles (`AIStyleToggles`).
+- a subpage of per-AI-style toggles (`AIStyleToggles`);
+- an "Additional AIs" section: an on/off switch, the percentage of draws that pick an additional AI, and a subpage of per-AI toggles (`AdditionalAIToggles`).
 
+- **Behavior encoding:** a behavior is one int, used everywhere, including sync and seeds. `> 0` borrows that vanilla NPC type's AI, `< 0` runs `CustomAI` number `-1 - behavior`, and `0` is the NPC's own AI.
+- **Additional AIs:** these are `CustomAI` subclasses in `Common/AIRandomizer/CustomAIs/`, grouped into ground, flying and shooter files.
+  - Each one is a single instance autoloaded through `ILoadable` and shared by every NPC, so per-NPC state must live in `npc.ai` (synced) or `npc.localAI` (not synced).
+  - Randomness, teleports and projectiles must run on the server and set `npc.netUpdate`.
+  - Helpers in the `CustomAI` base reserve `ai[2]/ai[3]` (`Home`) and `localAI[2]/localAI[3]` (`ShowTeleports`).
+  - `Shoot` only fires for hostile NPCs with damage, so town NPCs and critters never attack.
+  - Indices come from sorting by class name, so renaming or adding an AI changes what existing seeds produce.
+  - Every class needs a same-named bool field in `AdditionalAIToggles` and labels in both `.hjson` files. `BehaviorPool.PostSetupContent` throws if the classes and toggles don't match.
 - **How the swap works:** `BehaviorSwapGlobalNPC.PreAI` sets `npc.type` and `npc.aiStyle` to the borrowed NPC's values, calls `npc.VanillaAI()`, restores them, and returns false. This is the same mechanism `ModNPC.AIType` uses. Because of it, the borrowed AI's type-specific code runs too, including its projectiles and attacks, but stats, sprite, loot and chat stay the NPC's own. `noGravity` and `noTileCollide` come from `SetDefaults`, not from the AI, so they are copied from the borrowed type separately.
-- **Who picks the behavior:** the server or single player picks it, in `OnSpawn` (and lazily in `PreAI` for town NPCs loaded from the save), and syncs it to clients through `SendExtraAI`/`ReceiveExtraAI`. Clients never pick. ShuffleByType seeds the pick from the world seed plus the NPC type, so the mapping is stable per world.
+- **Who picks the behavior:** the server or single player picks it, in `OnSpawn` (and lazily in `PreAI` for town NPCs loaded from the save), and syncs it to clients through `SendExtraAI`/`ReceiveExtraAI`. Clients never pick. ShuffleByType seeds the pick from the config seed (or the world seed) plus the NPC type, so the mapping is stable for a given seed.
 - **Which NPCs take part:** `BehaviorPool.IsEligible` decides which NPCs can lend or borrow a behavior. It excludes bosses, Old One's Army NPCs and `ExcludedTypes`.
 - **Swappable styles:** the bool fields of `AIStyleToggles` are the one list of swappable AI styles. Each field must be named exactly like its `NPCAIStyleID` constant, because `BehaviorPool` maps fields to style IDs by reflection and throws at load if a name doesn't match. To add a style, add a field and its labels in both `.hjson` files. First make sure the style's AI does not depend on a parent NPC, body segments, a tile anchor or values set by whatever spawned it.
-- **How a pick works:** every draw picks a style other than the NPC's own, then an NPC of that style. A disabled style or broken behavior moves on to the next draw from the same RNG, so toggling one style only changes the NPCs that had drawn it. Config changes bump `BehaviorPool.Generation`, and NPCs re-pick when their generation is stale.
+- **How a pick works:** every draw first rolls the additional-AI chance. It then picks either an additional AI, or a vanilla style other than the NPC's own followed by an NPC of that style. A disabled or broken pick moves on to the next draw from the same RNG, so toggling one behavior only changes the NPCs that had drawn it. Config changes bump `BehaviorPool.Generation`, and NPCs re-pick when their generation is stale.
 - **Safety nets:**
   - While a borrowed AI runs, a detour on `On_NPC.Transform` blocks transformations, so the Guide can't turn into a Lihzahrd Crawler.
-  - An exception inside a borrowed AI is logged, and that behavior is banned for the rest of the session.
+  - An exception inside any behavior is logged, and that behavior is banned for the rest of the session.
 
 ## ExampleMod reference
 

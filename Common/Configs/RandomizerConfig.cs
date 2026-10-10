@@ -38,6 +38,18 @@ namespace RandAwisor.Common.Configs
 		[Header("AIStyles")]
 		public AIStyleToggles AIStyles = new();
 
+		[Header("AdditionalAIs")]
+		[DefaultValue(true)]
+		public bool EnableAdditionalAIs;
+
+		// Percent of draws that pick one of the mod's own AIs instead of a vanilla one.
+		[DefaultValue(50)]
+		[Range(0, 100)]
+		[Slider]
+		public int AdditionalAIChance;
+
+		public AdditionalAIToggles AdditionalAIs = new();
+
 		public override void OnChanged() {
 			BehaviorPool.ApplyConfig(this);
 		}

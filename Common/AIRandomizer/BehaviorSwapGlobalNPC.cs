@@ -9,19 +9,19 @@ using Terraria.ModLoader.IO;
 
 namespace RandAwisor.Common.AIRandomizer
 {
-	// Runs another NPC type's vanilla AI in place of the NPC's own, the same way ModNPC.AIType works:
-	// npc.type and npc.aiStyle are swapped to the borrowed type only while the AI runs.
-	// The server picks the borrowed type and syncs it, so clients run the same AI.
+	// Runs another behavior in place of the NPC's own AI: either a CustomAI, or another NPC type's vanilla AI
+	// the same way ModNPC.AIType works (npc.type and npc.aiStyle are swapped only while that AI runs).
+	// The server picks the behavior and syncs it, so clients run the same one.
 	public class BehaviorSwapGlobalNPC : GlobalNPC
 	{
 		public override bool InstancePerEntity => true;
 
-		// NPC type whose behavior this NPC borrows; 0 means its own behavior.
-		private int mimicType;
-		// Mode and BehaviorPool.Generation the current mimicType was picked for, so config changes re-pick it.
+		// See BehaviorPool for the encoding; 0 means the NPC's own AI.
+		private int behavior;
+		// Mode and BehaviorPool.Generation the current behavior was picked for, so config changes re-pick it.
 		private RandomizerMode? pickedMode;
 		private int pickedGeneration;
-		// Type whose noGravity/noTileCollide are currently applied; 0 means the NPC's own.
+		// Behavior whose noGravity/noTileCollide are currently applied; 0 means the NPC's own.
 		private int physicsOf;
 
 		public override bool AppliesToEntity(NPC entity, bool lateInstantiation) {
@@ -39,17 +39,17 @@ namespace RandAwisor.Common.AIRandomizer
 				PickBehavior(npc, config);
 			}
 
-			// Clients check the style too, so a style that was just disabled stops before the server's re-pick arrives.
-			bool mimicking = mimicType > 0
+			// Clients check IsEnabled too, so a behavior that was just disabled stops before the server's re-pick arrives.
+			bool active = behavior != 0
 				&& config.AIMode != RandomizerMode.Off
 				&& BehaviorPool.IsAffected(npc, config)
-				&& BehaviorPool.IsStyleEnabled(ContentSamples.NpcsByNetId[mimicType].aiStyle);
-			ApplyPhysics(npc, mimicking ? mimicType : 0);
-			if (!mimicking) {
+				&& BehaviorPool.IsEnabled(behavior);
+			ApplyPhysics(npc, active ? behavior : 0);
+			if (!active) {
 				return true;
 			}
 
-			RunBorrowedAI(npc);
+			RunBehavior(npc);
 			return false;
 		}
 
@@ -59,10 +59,10 @@ namespace RandAwisor.Common.AIRandomizer
 			}
 			pickedMode = config.AIMode;
 			pickedGeneration = BehaviorPool.Generation;
-			int source = config.AIMode == RandomizerMode.ShuffleByType
-				? BehaviorPool.ShuffledSource(npc.type)
-				: BehaviorPool.RandomSource(npc.type);
-			SetMimicType(npc, source);
+			int picked = config.AIMode == RandomizerMode.ShuffleByType
+				? BehaviorPool.ShuffledBehavior(npc.type)
+				: BehaviorPool.RandomBehavior(npc.type);
+			SetBehavior(npc, picked);
 		}
 
 		private bool NeedsPick(RandomizerConfig config) {
@@ -74,38 +74,49 @@ namespace RandAwisor.Common.AIRandomizer
 				return pickedGeneration != BehaviorPool.Generation;
 			}
 			// Random mode only re-rolls NPCs whose behavior was just disabled, or that found nothing enabled last time.
-			if (mimicType == 0) {
+			if (behavior == 0) {
 				return pickedGeneration != BehaviorPool.Generation;
 			}
-			return !BehaviorPool.IsStyleEnabled(ContentSamples.NpcsByNetId[mimicType].aiStyle);
+			return !BehaviorPool.IsEnabled(behavior);
 		}
 
-		private void SetMimicType(NPC npc, int type) {
-			if (type == mimicType) {
+		private void SetBehavior(NPC npc, int value) {
+			if (value == behavior) {
 				return;
 			}
-			mimicType = type;
+			behavior = value;
 			// Leftover state from the previous AI would confuse the new one.
 			Array.Clear(npc.ai);
 			Array.Clear(npc.localAI);
 			npc.netUpdate = true;
 		}
 
-		private void RunBorrowedAI(NPC npc) {
+		private void RunBehavior(NPC npc) {
+			try {
+				if (BehaviorPool.IsCustom(behavior)) {
+					BehaviorPool.CustomAIOf(behavior).Update(npc);
+				}
+				else {
+					RunBorrowedVanillaAI(npc);
+				}
+			}
+			catch (Exception e) {
+				Mod.Logger.Warn($"NPC {npc.type} crashed while running {BehaviorPool.Describe(behavior)}; that behavior is disabled for this session.", e);
+				BehaviorPool.MarkBroken(behavior);
+				// Fall back to the NPC's own AI; the server picks a new behavior on its next PreAI.
+				behavior = 0;
+				pickedMode = null;
+			}
+		}
+
+		private void RunBorrowedVanillaAI(NPC npc) {
 			int ownType = npc.type;
 			int ownStyle = npc.aiStyle;
-			npc.type = mimicType;
-			npc.aiStyle = ContentSamples.NpcsByNetId[mimicType].aiStyle;
+			npc.type = behavior;
+			npc.aiStyle = ContentSamples.NpcsByNetId[behavior].aiStyle;
 			BehaviorPool.MimickingNPC = npc.whoAmI;
 			try {
 				npc.VanillaAI();
-			}
-			catch (Exception e) {
-				Mod.Logger.Warn($"NPC {ownType} crashed while borrowing the AI of NPC {mimicType}; that behavior is disabled for this session.", e);
-				BehaviorPool.MarkBroken(mimicType);
-				// Fall back to the NPC's own AI; the server picks a new behavior on its next PreAI.
-				mimicType = 0;
-				pickedMode = null;
 			}
 			finally {
 				BehaviorPool.MimickingNPC = -1;
@@ -114,25 +125,44 @@ namespace RandAwisor.Common.AIRandomizer
 			}
 		}
 
-		// Flying AIs need noGravity, ghosts need noTileCollide, etc. These are normally set in SetDefaults,
-		// so copy them from the NPC whose behavior is running.
-		private void ApplyPhysics(NPC npc, int type) {
-			if (physicsOf == type) {
+		// Flying AIs need noGravity, ghosts need noTileCollide, etc. Vanilla sets these in SetDefaults rather than
+		// in the AI, so copy them from whatever behavior is running.
+		private void ApplyPhysics(NPC npc, int newBehavior) {
+			if (physicsOf == newBehavior) {
 				return;
 			}
-			NPC sample = ContentSamples.NpcsByNetId[type > 0 ? type : npc.type];
-			npc.noGravity = sample.noGravity;
-			npc.noTileCollide = sample.noTileCollide;
-			physicsOf = type;
+			NPC own = ContentSamples.NpcsByNetId[npc.type];
+			if (BehaviorPool.IsCustom(newBehavior)) {
+				var ai = BehaviorPool.CustomAIOf(newBehavior);
+				npc.noGravity = ai.NoGravity;
+				npc.noTileCollide = ai.NoTileCollide;
+			}
+			else {
+				NPC from = newBehavior > 0 ? ContentSamples.NpcsByNetId[newBehavior] : own;
+				npc.noGravity = from.noGravity;
+				npc.noTileCollide = from.noTileCollide;
+			}
+			// Some behaviors spin or fade the NPC; each one starts from the NPC's own look.
+			npc.rotation = 0f;
+			npc.alpha = own.alpha;
+			physicsOf = newBehavior;
 		}
 
 		public override void SendExtraAI(NPC npc, BitWriter bitWriter, BinaryWriter binaryWriter) {
-			binaryWriter.Write7BitEncodedInt(mimicType);
+			bool custom = BehaviorPool.IsCustom(behavior);
+			bitWriter.WriteBit(custom);
+			binaryWriter.Write7BitEncodedInt(custom ? BehaviorPool.CustomIndexOf(behavior) : behavior);
 		}
 
 		public override void ReceiveExtraAI(NPC npc, BitReader bitReader, BinaryReader binaryReader) {
-			int type = binaryReader.Read7BitEncodedInt();
-			mimicType = type > NPCID.None && type < NPCID.Count ? type : 0;
+			bool custom = bitReader.ReadBit();
+			int value = binaryReader.Read7BitEncodedInt();
+			if (custom) {
+				behavior = BehaviorPool.IsValidCustomIndex(value) ? BehaviorPool.CustomBehavior(value) : 0;
+			}
+			else {
+				behavior = value > NPCID.None && value < NPCID.Count ? value : 0;
+			}
 		}
 	}
 }

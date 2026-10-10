@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using RandAwisor.Common.AIRandomizer.CustomAIs;
 using RandAwisor.Common.Configs;
 using Terraria;
 using Terraria.ID;
@@ -10,13 +11,19 @@ using Terraria.Utilities;
 
 namespace RandAwisor.Common.AIRandomizer
 {
-	// Knows which vanilla NPCs can lend or borrow a behavior, and picks the behavior each NPC gets.
+	// Knows which behaviors exist, which NPCs can take part, and picks the behavior each NPC gets.
+	// A behavior is an int: > 0 borrows that vanilla NPC type's AI, < 0 runs CustomAI number (-1 - behavior),
+	// and 0 means the NPC's own AI.
 	public class BehaviorPool : ModSystem
 	{
 		// Swappable AI style -> its toggle in the config. AIStyleToggles is the single list of swappable styles.
 		private static readonly Dictionary<int, FieldInfo> StyleToggles = typeof(AIStyleToggles).GetFields()
 			.Where(f => f.FieldType == typeof(bool))
 			.ToDictionary(StyleIdOf, f => f);
+
+		private static readonly FieldInfo[] CustomAIToggles = typeof(AdditionalAIToggles).GetFields()
+			.Where(f => f.FieldType == typeof(bool))
+			.ToArray();
 
 		// NPCs whose type-specific AI code is destructive or removes the NPC from the world.
 		private static readonly HashSet<int> ExcludedTypes = new() {
@@ -28,20 +35,24 @@ namespace RandAwisor.Common.AIRandomizer
 			NPCID.OldMan,
 		};
 
-		// Draws per NPC before giving up on finding an enabled style.
+		// Draws per NPC before giving up on finding an enabled behavior.
 		private const int MaxDraws = 100;
 
 		private static readonly SortedDictionary<int, List<int>> typesByStyle = new();
-		private static readonly Dictionary<int, int> shuffledSources = new();
-		// Behaviors that threw while borrowed; never handed out again this session.
-		private static readonly HashSet<int> brokenSources = new();
+		// Sorted by name once content is loaded, so indices (synced to clients and used by seeds) are stable.
+		private static readonly List<CustomAI> customAIs = new();
+		private static readonly Dictionary<int, int> shuffledBehaviors = new();
+		// Behaviors that threw; never handed out again this session.
+		private static readonly HashSet<int> brokenBehaviors = new();
 		private static HashSet<int> disabledStyles = new();
+		private static HashSet<string> disabledCustomAIs = new();
+		private static int customAIChance;
 		private static string seedText = "";
 		private static int worldSeed;
 
 		// Bumped whenever the shuffle mapping may have changed, so NPCs know to pick again.
 		internal static int Generation;
-		// whoAmI of the NPC currently running a borrowed AI, or -1.
+		// whoAmI of the NPC currently running a borrowed vanilla AI, or -1.
 		internal static int MimickingNPC = -1;
 
 		private static int StyleIdOf(FieldInfo toggle) {
@@ -49,6 +60,20 @@ namespace RandAwisor.Common.AIRandomizer
 				?? throw new InvalidOperationException($"{nameof(AIStyleToggles)}.{toggle.Name} does not match any {nameof(NPCAIStyleID)} constant.");
 			return Convert.ToInt32(id.GetValue(null));
 		}
+
+		public static bool IsCustom(int behavior) => behavior < 0;
+
+		public static int CustomBehavior(int index) => -1 - index;
+
+		public static int CustomIndexOf(int behavior) => -1 - behavior;
+
+		public static CustomAI CustomAIOf(int behavior) => customAIs[CustomIndexOf(behavior)];
+
+		public static bool IsValidCustomIndex(int index) => index >= 0 && index < customAIs.Count;
+
+		public static string Describe(int behavior) => IsCustom(behavior) ? $"custom AI {CustomAIOf(behavior).Name}" : $"the AI of NPC {behavior}";
+
+		internal static void RegisterCustomAI(CustomAI ai) => customAIs.Add(ai);
 
 		public static bool IsEligible(NPC npc) {
 			return npc.type > NPCID.None && npc.type < NPCID.Count
@@ -70,32 +95,40 @@ namespace RandAwisor.Common.AIRandomizer
 			return config.AffectHostiles;
 		}
 
-		public static bool IsStyleEnabled(int style) => !disabledStyles.Contains(style);
+		public static bool IsEnabled(int behavior) {
+			if (IsCustom(behavior)) {
+				return customAIChance > 0 && !disabledCustomAIs.Contains(CustomAIOf(behavior).Name);
+			}
+			return !disabledStyles.Contains(ContentSamples.NpcsByNetId[behavior].aiStyle);
+		}
 
 		public static void ApplyConfig(RandomizerConfig config) {
-			var toggles = config.AIStyles ?? new AIStyleToggles();
-			disabledStyles = StyleToggles.Where(kv => !(bool)kv.Value.GetValue(toggles)).Select(kv => kv.Key).ToHashSet();
+			var styleToggles = config.AIStyles ?? new AIStyleToggles();
+			disabledStyles = StyleToggles.Where(kv => !(bool)kv.Value.GetValue(styleToggles)).Select(kv => kv.Key).ToHashSet();
+			var customToggles = config.AdditionalAIs ?? new AdditionalAIToggles();
+			disabledCustomAIs = CustomAIToggles.Where(f => !(bool)f.GetValue(customToggles)).Select(f => f.Name).ToHashSet();
+			customAIChance = config.EnableAdditionalAIs ? Math.Clamp(config.AdditionalAIChance, 0, 100) : 0;
 			seedText = config.Seed?.Trim() ?? "";
 			InvalidateShuffle();
 		}
 
-		public static int ShuffledSource(int type) {
-			if (!shuffledSources.TryGetValue(type, out int source)) {
-				source = Pick(type, new UnifiedRandom(unchecked(ResolveSeed() * 486187739 + type)));
-				shuffledSources[type] = source;
+		public static int ShuffledBehavior(int type) {
+			if (!shuffledBehaviors.TryGetValue(type, out int behavior)) {
+				behavior = Pick(type, new UnifiedRandom(unchecked(ResolveSeed() * 486187739 + type)));
+				shuffledBehaviors[type] = behavior;
 			}
-			return source;
+			return behavior;
 		}
 
-		public static int RandomSource(int type) => Pick(type, Main.rand);
+		public static int RandomBehavior(int type) => Pick(type, Main.rand);
 
-		public static void MarkBroken(int type) {
-			brokenSources.Add(type);
+		public static void MarkBroken(int behavior) {
+			brokenBehaviors.Add(behavior);
 			InvalidateShuffle();
 		}
 
 		private static void InvalidateShuffle() {
-			shuffledSources.Clear();
+			shuffledBehaviors.Clear();
 			Generation++;
 		}
 
@@ -115,22 +148,31 @@ namespace RandAwisor.Common.AIRandomizer
 			return unchecked((int)hash);
 		}
 
-		// Every draw takes a style (never the NPC's own, so the change is visible) and then an NPC of that style.
-		// A disabled style or broken behavior just moves on to the next draw, so toggling a style only changes
-		// the NPCs that had drawn it; everyone else keeps the same behavior for the same seed.
-		// Drawing the style first keeps the 200+ Fighter NPCs from drowning out every other style.
+		// Each draw first rolls whether to use one of the mod's own AIs (AdditionalAIChance), then picks one of them,
+		// or a vanilla style (never the NPC's own, so the change is visible) and an NPC of that style.
+		// Picking the style first keeps the 200+ Fighter NPCs from drowning out every other style.
+		// A disabled or broken pick just moves on to the next draw, so toggling one behavior only changes the NPCs
+		// that had drawn it; everyone else keeps the same behavior for the same seed.
 		private static int Pick(int ownType, UnifiedRandom rand) {
 			int ownStyle = ContentSamples.NpcsByNetId[ownType].aiStyle;
 			var styles = typesByStyle.Keys.Where(s => s != ownStyle).ToList();
-			if (styles.Count == 0) {
-				return 0;
-			}
 			for (int draw = 0; draw < MaxDraws; draw++) {
-				int style = styles[rand.Next(styles.Count)];
-				var types = typesByStyle[style];
-				int type = types[rand.Next(types.Count)];
-				if (IsStyleEnabled(style) && !brokenSources.Contains(type)) {
-					return type;
+				int behavior;
+				if (rand.Next(100) < customAIChance) {
+					if (customAIs.Count == 0) {
+						continue;
+					}
+					behavior = CustomBehavior(rand.Next(customAIs.Count));
+				}
+				else {
+					if (styles.Count == 0) {
+						continue;
+					}
+					var types = typesByStyle[styles[rand.Next(styles.Count)]];
+					behavior = types[rand.Next(types.Count)];
+				}
+				if (IsEnabled(behavior) && !brokenBehaviors.Contains(behavior)) {
+					return behavior;
 				}
 			}
 			return 0;
@@ -160,6 +202,15 @@ namespace RandAwisor.Common.AIRandomizer
 				}
 				types.Add(type);
 			}
+
+			customAIs.Sort((a, b) => string.CompareOrdinal(a.Name, b.Name));
+			var withoutToggle = customAIs.Select(ai => ai.Name).Except(CustomAIToggles.Select(f => f.Name)).ToList();
+			var withoutAI = CustomAIToggles.Select(f => f.Name).Except(customAIs.Select(ai => ai.Name)).ToList();
+			if (withoutToggle.Count > 0 || withoutAI.Count > 0) {
+				throw new InvalidOperationException(
+					$"{nameof(AdditionalAIToggles)} must have exactly one field per {nameof(CustomAI)}. " +
+					$"Missing toggles: [{string.Join(", ", withoutToggle)}]. Toggles without an AI: [{string.Join(", ", withoutAI)}].");
+			}
 		}
 
 		public override void OnWorldLoad() {
@@ -168,13 +219,14 @@ namespace RandAwisor.Common.AIRandomizer
 		}
 
 		public override void OnWorldUnload() {
-			shuffledSources.Clear();
+			shuffledBehaviors.Clear();
 		}
 
 		public override void Unload() {
 			typesByStyle.Clear();
-			shuffledSources.Clear();
-			brokenSources.Clear();
+			customAIs.Clear();
+			shuffledBehaviors.Clear();
+			brokenBehaviors.Clear();
 		}
 	}
 }

@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Linq;
 using Terraria.ModLoader.Config;
 
 namespace RandAwisor.Common.Configs
@@ -9,7 +8,7 @@ namespace RandAwisor.Common.Configs
 	// Styles not listed here need a parent NPC, body segments, a tile anchor or arena state
 	// (bosses, worms, Man Eaters, spells, Old One's Army...) and break when another NPC borrows them.
 	[SeparatePage]
-	public class AIStyleToggles
+	public class AIStyleToggles : ToggleSet
 	{
 		[Header("Enemies")]
 		[DefaultValue(true)] public bool Slime = true;
@@ -48,14 +47,5 @@ namespace RandAwisor.Common.Configs
 		[DefaultValue(true)] public bool Ladybug = true;
 		[DefaultValue(true)] public bool WaterStrider = true;
 		[DefaultValue(true)] public bool Seahorse = true;
-
-		// tModLoader compares nested config objects with Equals to detect pending changes.
-		public override bool Equals(object obj) {
-			return obj is AIStyleToggles other && GetType().GetFields().All(f => Equals(f.GetValue(this), f.GetValue(other)));
-		}
-
-		public override int GetHashCode() {
-			return GetType().GetFields().Aggregate(17, (hash, f) => hash * 31 + f.GetValue(this).GetHashCode());
-		}
 	}
 }

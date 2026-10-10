@@ -30,6 +30,7 @@ Configs: {
 		Headers: {
 			Behavior: Comportamento dos NPCs
 			AIStyles: Estilos de IA
+			AdditionalAIs: IAs adicionais
 		}
 
 		AIMode: {
@@ -68,6 +69,21 @@ Configs: {
 
 		AIStyles: {
 			Label: IAs ativadas
+			Tooltip: Uma IA desativada nunca é sorteada; o NPC que a receberia fica com o próximo sorteio da seed.
+		}
+
+		EnableAdditionalAIs: {
+			Label: Usar IAs adicionais
+			Tooltip: Os 50 comportamentos do mod entram no sorteio junto com as IAs do jogo.
+		}
+
+		AdditionalAIChance: {
+			Label: Chance de IA adicional (%)
+			Tooltip: Parte dos sorteios que escolhe uma IA adicional em vez de uma IA do jogo.
+		}
+
+		AdditionalAIs: {
+			Label: IAs adicionais ativadas
 			Tooltip: Uma IA desativada nunca é sorteada; o NPC que a receberia fica com o próximo sorteio da seed.
 		}
 	}
@@ -248,6 +264,266 @@ Configs: {
 		Seahorse: {
 			Label: Cavalo-marinho
 			Tooltip: ""
+		}
+	}
+
+	AdditionalAIToggles: {
+		Tooltip: ""
+
+		Headers: {
+			Ground: Chão
+			Flying: Voadoras
+			Shooters: Atiradoras (só NPCs hostis atiram)
+		}
+
+		Flea: {
+			Label: Pulga
+			Tooltip: Pulinhos sem parar na sua direção.
+		}
+
+		Kangaroo: {
+			Label: Canguru
+			Tooltip: Descansa e então dá um salto longo até você.
+		}
+
+		Coward: {
+			Label: Covarde
+			Tooltip: Foge de você.
+		}
+
+		Patrol: {
+			Label: Ronda
+			Tooltip: Anda de um lado para o outro perto de onde surgiu e ignora você.
+		}
+
+		Ram: {
+			Label: Aríete
+			Tooltip: Prepara, investe em linha reta e depois toma fôlego.
+		}
+
+		Sleepwalker: {
+			Label: Sonâmbulo
+			Tooltip: Arrasta-se devagar numa direção e vira nas paredes.
+		}
+
+		Shy: {
+			Label: Tímido
+			Tooltip: Só se aproxima quando você olha para o outro lado e congela quando é observado.
+		}
+
+		Mirror: {
+			Label: Espelho
+			Tooltip: Anda ao contrário de você e pula quando você pula.
+		}
+
+		Shadow: {
+			Label: Sombra
+			Tooltip: Copia o seu movimento.
+		}
+
+		Bouncer: {
+			Label: Quique
+			Tooltip: Quica como uma bola de borracha e volta ao bater na parede.
+		}
+
+		Boulder: {
+			Label: Pedregulho
+			Tooltip: Ganha velocidade como uma pedra rolando e passa do ponto.
+		}
+
+		Dizzy: {
+			Label: Tonto
+			Tooltip: Cambaleia até você, às vezes para o lado errado.
+		}
+
+		Sloth: {
+			Label: Preguiça
+			Tooltip: Quase não se mexe.
+		}
+
+		Skater: {
+			Label: Patinador
+			Tooltip: Dá impulso e desliza sem atrito, como no gelo.
+		}
+
+		Lunar: {
+			Label: Lunar
+			Tooltip: Saltos flutuantes, como em baixa gravidade.
+		}
+
+		Anvil: {
+			Label: Bigorna
+			Tooltip: Salta alto quando está perto e cai com tudo.
+		}
+
+		Ceiling: {
+			Label: Teto
+			Tooltip: Cai para cima e anda pelo teto.
+		}
+
+		Gecko: {
+			Label: Lagartixa
+			Tooltip: Sobe direto pelas paredes.
+		}
+
+		Parachute: {
+			Label: Paraquedas
+			Tooltip: Pula para o alto e desce planando até você.
+		}
+
+		Clockwork: {
+			Label: Relógio
+			Tooltip: Anda em passos duros: anda um tempo, para um tempo.
+		}
+
+		Grudge: {
+			Label: Rancor
+			Tooltip: Passeia em paz até levar dano, e então vai atrás de você.
+		}
+
+		Skittish: {
+			Label: Fujão
+			Tooltip: Persegue você, mas foge quando fica com menos de metade da vida.
+		}
+
+		Glitch: {
+			Label: Falha
+			Tooltip: Anda até você e pula alguns blocos aleatoriamente.
+		}
+
+		Chameleon: {
+			Label: Camaleão
+			Tooltip: Persegue você quase invisível até chegar perto.
+		}
+
+		Orbit: {
+			Label: Órbita
+			Tooltip: Gira em volta de você.
+		}
+
+		Spiral: {
+			Label: Espiral
+			Tooltip: Gira em volta de você, ora mais perto, ora mais longe.
+		}
+
+		Zigzag: {
+			Label: Ziguezague
+			Tooltip: Se aproxima desviando de um lado para o outro.
+		}
+
+		Diver: {
+			Label: Mergulho
+			Tooltip: Paira acima de você, mergulha direto para baixo e volta a subir.
+		}
+
+		Hummingbird: {
+			Label: Colibri
+			Tooltip: Dispara para pontos aleatórios perto de você e para.
+		}
+
+		Haunt: {
+			Label: Assombro
+			Tooltip: Flutua devagar através das paredes e some quando está longe.
+		}
+
+		Blink: {
+			Label: Pisca
+			Tooltip: Teleporta para perto de você a cada poucos segundos.
+		}
+
+		Magnet: {
+			Label: Ímã
+			Tooltip: É puxado até você sem freio, então sempre passa do ponto.
+		}
+
+		Spring: {
+			Label: Mola
+			Tooltip: Balança numa mola invisível acima de você.
+		}
+
+		Pendulum: {
+			Label: Pêndulo
+			Tooltip: Balança de um lado para o outro onde surgiu e ignora você.
+		}
+
+		Wave: {
+			Label: Onda
+			Tooltip: Passa por você em ondas.
+		}
+
+		Boomerang: {
+			Label: Bumerangue
+			Tooltip: Gira em sua direção e volta para onde surgiu.
+		}
+
+		Swarm: {
+			Label: Enxame
+			Tooltip: Zune em volta de você aos trancos.
+		}
+
+		Kite: {
+			Label: Pipa
+			Tooltip: Flutua bem acima de você, vindo atrás e balançando.
+		}
+
+		Comet: {
+			Label: Cometa
+			Tooltip: Cruza a sua área em linha reta.
+		}
+
+		Whirlwind: {
+			Label: Redemoinho
+			Tooltip: Gira cada vez mais rápido e mais perto de você.
+		}
+
+		FigureEight: {
+			Label: Oito
+			Tooltip: Desenha um oito em volta de você.
+		}
+
+		Tick: {
+			Label: Carrapato
+			Tooltip: Gruda em você por alguns segundos.
+		}
+
+		Rocket: {
+			Label: Foguete
+			Tooltip: Sobe bem alto e depois desce mirando em você.
+		}
+
+		Knight: {
+			Label: Cavalo
+			Tooltip: Só se move em saltos em L, como o cavalo do xadrez.
+		}
+
+		Sentinel: {
+			Label: Vigia
+			Tooltip: Paira parado e atira lasers quando vê você.
+		}
+
+		Turret: {
+			Label: Torreta
+			Tooltip: Fica parado e dispara rajadas de três lasers.
+		}
+
+		Mortar: {
+			Label: Morteiro
+			Tooltip: Mantém distância e arremessa bolas de neve em você.
+		}
+
+		Fan: {
+			Label: Leque
+			Tooltip: Voa a distância e atira um leque de ferrões.
+		}
+
+		Urchin: {
+			Label: Ouriço
+			Tooltip: Fica parado e solta ferrões em oito direções.
+		}
+
+		Sniper: {
+			Label: Atirador
+			Tooltip: Fica bem longe, mostra a mira e dispara um laser rápido.
 		}
 	}
 
