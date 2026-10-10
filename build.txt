@@ -1,0 +1,3 @@
+displayName = Randomizer Awisor
+author = josezitojuniores
+version = 0.1
