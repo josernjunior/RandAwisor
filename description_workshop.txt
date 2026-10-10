@@ -1,5 +1,5 @@
 [h1]Randomizer Awisor[/h1]
-Scrambles how NPCs behave. Zombies hop like slimes, the Guide flies around like a Demon Eye, bunnies orbit you, bats teleport next to you... Everything else stays the same: stats, sprites, loot and chat.
+Scrambles how NPCs behave. Zombies hop like slimes, the Guide flies around like a Demon Eye, bunnies orbit you, bats teleport next to you... Stats, sprites and chat stay the same. Optionally, enemy drops can be randomized too.
 
 [h2]AI Randomizer[/h2]
 Configure it in [b]Mod Configuration > AI Randomizer[/b]. Changes apply instantly, no reload needed.
@@ -12,24 +12,19 @@ Configure it in [b]Mod Configuration > AI Randomizer[/b]. Changes apply instantl
 [*]A turned-off AI is never handed out. The NPC that would get it takes the seed's next pick instead, and every other NPC keeps its behavior.
 [/list]
 
-[h2]Good to know[/h2]
+[h2]Random drops[/h2]
+Off by default. Pick a mode in the same config page:
 [list]
-[*]A borrowed AI brings its attacks along: a Guide with a Goblin Sorcerer's AI will throw chaos balls at you. The mod's own shooter AIs only fire from hostile NPCs.
-[*]Bosses, worms and invasion enemies keep their own AI, because they break when swapped.
-[*]An AI never turns an NPC into a different NPC. If an AI ever crashes, it is logged and turned off for the rest of the session instead of crashing the game.
-[*]Multiplayer: the server picks every NPC's behavior and syncs it to all players.
+[*][b]Shuffle between enemies:[/b] each enemy type drops the loot of another enemy type, decided by the seed.
+[*][b]Any item:[/b] enemies drop one random item from the whole game instead of their loot.
+[*][b]Extra random item:[/b] enemies keep their loot and also drop one random item.
 [/list]
-
-[h2]Dirt gear[/h2]
-[list]
-[*][b]Dirt Sword:[/b] 5 Dirt Blocks, crafted anywhere.
-[*][b]Dirt Helmet, Dirt Breastplate and Dirt Leggings:[/b] 15, 25 and 18 Dirt Blocks at a Work Bench.
-[/list]
+Bosses, coins, hearts, banners and drops like souls never change, and enemies from statues never get random drops.
 
 [hr][/hr]
 
 [h1]Português[/h1]
-Randomizer Awisor embaralha o comportamento dos NPCs: zumbis pulam como slimes, o Guia voa como um Olho Demoníaco, coelhos giram em volta de você... Vida, sprite, loot e diálogos continuam os mesmos.
+Randomizer Awisor embaralha o comportamento dos NPCs: zumbis pulam como slimes, o Guia voa como um Olho Demoníaco, coelhos giram em volta de você... Vida, sprite e diálogos continuam os mesmos. Se quiser, os drops dos inimigos também podem ser aleatórios.
 
 [h2]Randomizador de IA[/h2]
 Configure em [b]Mod Configuration > Randomizador de IA[/b]. As mudanças valem na hora, sem recarregar.
@@ -42,16 +37,11 @@ Configure em [b]Mod Configuration > Randomizador de IA[/b]. As mudanças valem n
 [*]Uma IA desligada nunca é sorteada. O NPC que a receberia fica com o próximo sorteio da seed, e os outros NPCs não mudam.
 [/list]
 
-[h2]Bom saber[/h2]
+[h2]Drops aleatórios[/h2]
+Desligado por padrão. Escolha um modo na mesma página de configuração:
 [list]
-[*]Uma IA emprestada traz os ataques junto: um Guia com a IA do Feiticeiro Goblin vai jogar bolas de caos em você. As IAs atiradoras do mod só atiram em NPCs hostis.
-[*]Chefes, minhocas e inimigos de invasão mantêm a própria IA, porque quebram quando trocados.
-[*]Uma IA nunca transforma um NPC em outro. Se uma IA der erro, ela é registrada no log e desligada até o fim da sessão, em vez de travar o jogo.
-[*]Multiplayer: o servidor escolhe o comportamento de cada NPC e sincroniza com todos os jogadores.
+[*][b]Trocar entre inimigos:[/b] cada tipo de inimigo dropa o loot de outro tipo de inimigo, de acordo com a seed.
+[*][b]Qualquer item:[/b] os inimigos dropam um item aleatório do jogo inteiro no lugar do loot.
+[*][b]Item extra aleatório:[/b] os inimigos mantêm o loot e dropam também um item aleatório.
 [/list]
-
-[h2]Equipamento de terra[/h2]
-[list]
-[*][b]Espada de Terra:[/b] 5 blocos de terra, sem bancada.
-[*][b]Capacete, Peitoral e Calças de Terra:[/b] 15, 25 e 18 blocos de terra na Bancada de Trabalho.
-[/list]
+Chefes, moedas, corações, estandartes e drops como almas nunca mudam, e inimigos de estátua nunca ganham drops aleatórios.

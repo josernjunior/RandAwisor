@@ -13,6 +13,17 @@ namespace RandAwisor.Common.Configs
 		RandomPerNPC
 	}
 
+	public enum DropMode
+	{
+		Off,
+		// Each enemy type drops the loot of another enemy type, fixed by the seed.
+		ShuffleBetweenEnemies,
+		// Enemies drop one random item from the whole game instead of their loot.
+		AnyItem,
+		// Enemies keep their loot and also drop one random item from the whole game.
+		ExtraRandomItem
+	}
+
 	public class RandomizerConfig : ModConfig
 	{
 		public override ConfigScope Mode => ConfigScope.ServerSide;
@@ -49,6 +60,11 @@ namespace RandAwisor.Common.Configs
 		public int AdditionalAIChance;
 
 		public AdditionalAIToggles AdditionalAIs = new();
+
+		[Header("Drops")]
+		[DefaultValue(DropMode.Off)]
+		[DrawTicks]
+		public DropMode RandomDrops;
 
 		public override void OnChanged() {
 			BehaviorPool.ApplyConfig(this);

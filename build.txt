@@ -1,4 +1,4 @@
 displayName = Randomizer Awisor
 author = josezitojuniores
-version = 1.0.1
+version = 1.0.2
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, Properties\*, CLAUDE.md, ExampleMod.tmod, ExampleModSource\*, Workshop\*, enabled.json, publish.vdf

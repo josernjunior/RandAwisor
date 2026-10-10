@@ -1,4 +1,4 @@
-Randomizer Awisor scrambles how NPCs behave. Zombies hop like slimes, the Guide flies around like a Demon Eye, bunnies orbit you, bats teleport next to you... Everything else stays the same: stats, sprites, loot and chat.
+Randomizer Awisor scrambles how NPCs behave. Zombies hop like slimes, the Guide flies around like a Demon Eye, bunnies orbit you, bats teleport next to you... Stats, sprites and chat stay the same. Optionally, enemy drops can be randomized too.
 
 AI RANDOMIZER
 Configure it in Mod Configuration > AI Randomizer. Changes apply instantly, no reload needed.
@@ -9,23 +9,18 @@ Configure it in Mod Configuration > AI Randomizer. Changes apply instantly, no r
 - 50 additional AIs made for this mod: Flea, Kangaroo, Mirror, Orbit, Comet, Knight (moves like the chess piece), Sniper and more. Turn each one on or off, and set how often they are picked.
 - A turned-off AI is never handed out. The NPC that would get it takes the seed's next pick instead.
 
-Good to know
-- A borrowed AI brings its attacks along: a Guide with a Goblin Sorcerer's AI will throw chaos balls at you. The mod's own shooter AIs only fire from hostile NPCs.
-- Bosses, worms and invasion enemies keep their own AI, because they break when swapped.
-- An AI never turns an NPC into a different NPC. If an AI ever crashes, it is logged and turned off for the rest of the session instead of crashing the game.
-- Multiplayer: the server picks every NPC's behavior and syncs it to all players.
-
-DIRT GEAR
-- Dirt Sword: 5 Dirt Blocks, crafted anywhere.
-- Dirt Helmet, Dirt Breastplate and Dirt Leggings: 15, 25 and 18 Dirt Blocks at a Work Bench.
+RANDOM DROPS
+Off by default. Pick a mode in the same config page:
+- Shuffle between enemies: each enemy type drops the loot of another enemy type, decided by the seed.
+- Any item: enemies drop one random item from the whole game instead of their loot.
+- Extra random item: enemies keep their loot and also drop one random item.
+Bosses, coins, hearts, banners and drops like souls never change, and enemies from statues never get random drops.
 
 PORTUGUÊS
-Randomizer Awisor embaralha o comportamento dos NPCs: zumbis pulam como slimes, o Guia voa como um Olho Demoníaco, coelhos giram em volta de você... Vida, sprite, loot e diálogos continuam os mesmos.
+Randomizer Awisor embaralha o comportamento dos NPCs: zumbis pulam como slimes, o Guia voa como um Olho Demoníaco, coelhos giram em volta de você... Vida, sprite e diálogos continuam os mesmos. Se quiser, os drops dos inimigos também podem ser aleatórios.
 - Configure em Mod Configuration > Randomizador de IA. As mudanças valem na hora.
 - Trocar por tipo: cada tipo de NPC sempre age como outro, de acordo com uma seed (número ou texto; vazia usa a seed do mundo). A mesma seed sempre gera as mesmas trocas.
 - Aleatório por NPC: cada NPC que aparece ganha um comportamento sorteado.
 - Escolha se inimigos, moradores da cidade e bichinhos são afetados.
 - 34 estilos de IA do jogo e 50 IAs adicionais criadas para o mod, cada uma com liga/desliga. Uma IA desligada é trocada pelo próximo sorteio da seed.
-- Uma IA emprestada traz os ataques junto. As IAs atiradoras do mod só atiram em NPCs hostis.
-- Chefes, minhocas e inimigos de invasão mantêm a própria IA.
-- Equipamento de terra: Espada de Terra (5 blocos de terra) e Capacete, Peitoral e Calças de Terra (15, 25 e 18 blocos de terra, na Bancada de Trabalho).
+- Drops aleatórios (desligado por padrão): trocar o loot entre inimigos pela seed, dropar qualquer item do jogo no lugar do loot, ou dropar um item aleatório extra. Chefes, moedas, corações, estandartes e drops como almas nunca mudam.

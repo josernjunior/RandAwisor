@@ -31,6 +31,7 @@ Configs: {
 			Behavior: NPC behavior
 			AIStyles: AI styles
 			AdditionalAIs: Additional AIs
+			Drops: Enemy drops
 		}
 
 		AIMode: {
@@ -85,6 +86,18 @@ Configs: {
 		AdditionalAIs: {
 			Label: Enabled additional AIs
 			Tooltip: A disabled AI is never handed out; an NPC that would get it takes the seed's next draw instead.
+		}
+
+		RandomDrops: {
+			Label: Random drops
+			Tooltip:
+				'''
+				Off: enemies drop their normal loot.
+				Shuffle between enemies: each enemy type drops the loot of another enemy type (fixed by the seed).
+				Any item: enemies drop one random item from the whole game instead of their loot.
+				Extra random item: enemies keep their loot and also drop one random item.
+				Bosses, Old One's Army enemies, coins, hearts, banners and global drops like souls never change. Enemies from statues never get random drops.
+				'''
 		}
 	}
 
@@ -524,6 +537,30 @@ Configs: {
 		Sniper: {
 			Label: Sniper
 			Tooltip: Keeps far away, shows its aim, then fires one fast laser.
+		}
+	}
+
+	DropMode: {
+		Tooltip: ""
+
+		Off: {
+			Label: Off
+			Tooltip: ""
+		}
+
+		ShuffleBetweenEnemies: {
+			Label: Shuffle between enemies
+			Tooltip: ""
+		}
+
+		AnyItem: {
+			Label: Any item
+			Tooltip: ""
+		}
+
+		ExtraRandomItem: {
+			Label: Extra random item
+			Tooltip: ""
 		}
 	}
 

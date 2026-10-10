@@ -51,6 +51,22 @@ This is the mod's main feature. Each vanilla NPC runs another behavior instead o
   - While a borrowed AI runs, a detour on `On_NPC.Transform` blocks transformations, so the Guide can't turn into a Lihzahrd Crawler.
   - An exception inside any behavior is logged, and that behavior is banned for the rest of the session.
 
+## Random drops
+
+This lives in `Common/LootRandomizer/` and is set by `RandomizerConfig.RandomDrops`, a `DropMode`: Off / ShuffleBetweenEnemies / AnyItem / ExtraRandomItem. The default is Off.
+
+- **How the loot tables change:** loot tables are built once at load, so the mode can't be applied there. Instead, `RandomLootGlobalNPC.ModifyNPCLoot` rewires every eligible enemy:
+  - its own (non-global) rules move under a `LeadingConditionRule(NormalLootCondition)`;
+  - a `RandomLootRule` is added;
+  - both check the config when something dies, so switching modes in game needs no reload.
+- **Original rules:** they are also kept in `LootPool.originalRules`. ShuffleBetweenEnemies runs the source enemy's original rules through a copy of vanilla's `ItemDropResolver` logic (nested rules and chains). Running the wrapped table instead would hit the condition and recurse into `RandomLootRule`.
+- **Seeding:** the shuffle mapping uses `BehaviorPool.SeededRandom(netID, LootRoll)`, so it follows the config seed. It is cached per `BehaviorPool.Generation`. AnyItem and ExtraRandomItem use `info.rng` on every kill.
+- **What stays untouched:**
+  - bosses, Old One's Army, town NPCs and critters (`LootPool.IsEligible`);
+  - global rules like souls and biome keys, plus coins, hearts and banners, which are outside the per-NPC rules;
+  - statue-spawned enemies, which never get random drops.
+- **Other mods:** rules a mod adds or removes after this `ModifyNPCLoot` runs are not wrapped, and top-level `RemoveWhere` from other mods won't find the moved rules.
+
 ## ExampleMod reference
 
 The official tModLoader ExampleMod (a Steam Workshop download) is kept in this folder as reference material. When you need to see how a tModLoader API is used, look it up here before guessing.

@@ -125,12 +125,15 @@ namespace RandAwisor.Common.AIRandomizer
 			if (roll == 0 && shuffledBehaviors.TryGetValue(type, out int cached)) {
 				return cached;
 			}
-			int behavior = Pick(type, new UnifiedRandom(Mix(Mix(Mix(ResolveSeed()) ^ type) ^ roll)));
+			int behavior = Pick(type, SeededRandom(type, roll));
 			if (roll == 0) {
 				shuffledBehaviors[type] = behavior;
 			}
 			return behavior;
 		}
+
+		// The RNG behind every seeded pick in the mod, including LootPool's, so everything follows the config seed.
+		internal static UnifiedRandom SeededRandom(int key, int roll) => new UnifiedRandom(Mix(Mix(Mix(ResolveSeed()) ^ key) ^ roll));
 
 		// Server only.
 		public static int NextRoll() => ++lastRoll;
