@@ -1,1 +1,57 @@
-This description will show up on the steam page, check out https://steamcommunity.com/comment/Guide/formattinghelp.
+[h1]Randomizer Awisor[/h1]
+Scrambles how NPCs behave. Zombies hop like slimes, the Guide flies around like a Demon Eye, bunnies orbit you, bats teleport next to you... Everything else stays the same: stats, sprites, loot and chat.
+
+[h2]AI Randomizer[/h2]
+Configure it in [b]Mod Configuration > AI Randomizer[/b]. Changes apply instantly, no reload needed.
+[list]
+[*][b]Shuffle by type:[/b] every NPC type always behaves like another one. The swaps are decided by a [b]seed[/b] you can type in (a number or any text). Leave it empty to use the world's seed. The same seed always gives the same swaps, so you can share a seed with friends.
+[*][b]Random per NPC:[/b] every NPC that spawns gets a random behavior.
+[*]Choose whether [b]enemies, town NPCs and critters[/b] are affected.
+[*][b]34 of the game's AI styles[/b] can be swapped, and each one can be turned off.
+[*][b]50 additional AIs[/b] made for this mod, such as Flea, Kangaroo, Mirror, Ceiling, Orbit, Comet, Tick, Knight (moves like the chess piece) and Sniper. Turn each one on or off, and set how often they are picked.
+[*]A turned-off AI is never handed out. The NPC that would get it takes the seed's next pick instead, and every other NPC keeps its behavior.
+[/list]
+
+[h2]Good to know[/h2]
+[list]
+[*]A borrowed AI brings its attacks along: a Guide with a Goblin Sorcerer's AI will throw chaos balls at you. The mod's own shooter AIs only fire from hostile NPCs.
+[*]Bosses, worms and invasion enemies keep their own AI, because they break when swapped.
+[*]An AI never turns an NPC into a different NPC. If an AI ever crashes, it is logged and turned off for the rest of the session instead of crashing the game.
+[*]Multiplayer: the server picks every NPC's behavior and syncs it to all players.
+[/list]
+
+[h2]Dirt gear[/h2]
+[list]
+[*][b]Dirt Sword:[/b] 5 Dirt Blocks, crafted anywhere.
+[*][b]Dirt Helmet, Dirt Breastplate and Dirt Leggings:[/b] 15, 25 and 18 Dirt Blocks at a Work Bench.
+[/list]
+
+[hr][/hr]
+
+[h1]Português[/h1]
+Randomizer Awisor embaralha o comportamento dos NPCs: zumbis pulam como slimes, o Guia voa como um Olho Demoníaco, coelhos giram em volta de você... Vida, sprite, loot e diálogos continuam os mesmos.
+
+[h2]Randomizador de IA[/h2]
+Configure em [b]Mod Configuration > Randomizador de IA[/b]. As mudanças valem na hora, sem recarregar.
+[list]
+[*][b]Trocar por tipo:[/b] cada tipo de NPC sempre age como outro, de acordo com uma [b]seed[/b] que você digita (número ou texto). Vazia, usa a seed do mundo. A mesma seed sempre gera as mesmas trocas, então dá para compartilhar com os amigos.
+[*][b]Aleatório por NPC:[/b] cada NPC que aparece ganha um comportamento sorteado.
+[*]Escolha se [b]inimigos, moradores da cidade e bichinhos[/b] são afetados.
+[*][b]34 estilos de IA do jogo[/b] podem ser trocados, cada um com liga/desliga.
+[*][b]50 IAs adicionais[/b] criadas para o mod, como Pulga, Canguru, Espelho, Teto, Órbita, Cometa, Carrapato, Cavalo (anda como no xadrez) e Atirador. Ligue ou desligue cada uma e escolha com que frequência elas são sorteadas.
+[*]Uma IA desligada nunca é sorteada. O NPC que a receberia fica com o próximo sorteio da seed, e os outros NPCs não mudam.
+[/list]
+
+[h2]Bom saber[/h2]
+[list]
+[*]Uma IA emprestada traz os ataques junto: um Guia com a IA do Feiticeiro Goblin vai jogar bolas de caos em você. As IAs atiradoras do mod só atiram em NPCs hostis.
+[*]Chefes, minhocas e inimigos de invasão mantêm a própria IA, porque quebram quando trocados.
+[*]Uma IA nunca transforma um NPC em outro. Se uma IA der erro, ela é registrada no log e desligada até o fim da sessão, em vez de travar o jogo.
+[*]Multiplayer: o servidor escolhe o comportamento de cada NPC e sincroniza com todos os jogadores.
+[/list]
+
+[h2]Equipamento de terra[/h2]
+[list]
+[*][b]Espada de Terra:[/b] 5 blocos de terra, sem bancada.
+[*][b]Capacete, Peitoral e Calças de Terra:[/b] 15, 25 e 18 blocos de terra na Bancada de Trabalho.
+[/list]

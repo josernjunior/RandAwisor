@@ -1,1 +1,31 @@
-Modify this file with a description of your mod.
+Randomizer Awisor scrambles how NPCs behave. Zombies hop like slimes, the Guide flies around like a Demon Eye, bunnies orbit you, bats teleport next to you... Everything else stays the same: stats, sprites, loot and chat.
+
+AI RANDOMIZER
+Configure it in Mod Configuration > AI Randomizer. Changes apply instantly, no reload needed.
+- Shuffle by type: every NPC type always behaves like another one. The swaps are decided by a seed you can type in (a number or any text). Leave it empty to use the world's seed. The same seed always gives the same swaps.
+- Random per NPC: every NPC that spawns gets a random behavior.
+- Choose whether enemies, town NPCs and critters are affected.
+- 34 of the game's AI styles can be swapped, and each one can be turned off.
+- 50 additional AIs made for this mod: Flea, Kangaroo, Mirror, Orbit, Comet, Knight (moves like the chess piece), Sniper and more. Turn each one on or off, and set how often they are picked.
+- A turned-off AI is never handed out. The NPC that would get it takes the seed's next pick instead.
+
+Good to know
+- A borrowed AI brings its attacks along: a Guide with a Goblin Sorcerer's AI will throw chaos balls at you. The mod's own shooter AIs only fire from hostile NPCs.
+- Bosses, worms and invasion enemies keep their own AI, because they break when swapped.
+- An AI never turns an NPC into a different NPC. If an AI ever crashes, it is logged and turned off for the rest of the session instead of crashing the game.
+- Multiplayer: the server picks every NPC's behavior and syncs it to all players.
+
+DIRT GEAR
+- Dirt Sword: 5 Dirt Blocks, crafted anywhere.
+- Dirt Helmet, Dirt Breastplate and Dirt Leggings: 15, 25 and 18 Dirt Blocks at a Work Bench.
+
+PORTUGUÊS
+Randomizer Awisor embaralha o comportamento dos NPCs: zumbis pulam como slimes, o Guia voa como um Olho Demoníaco, coelhos giram em volta de você... Vida, sprite, loot e diálogos continuam os mesmos.
+- Configure em Mod Configuration > Randomizador de IA. As mudanças valem na hora.
+- Trocar por tipo: cada tipo de NPC sempre age como outro, de acordo com uma seed (número ou texto; vazia usa a seed do mundo). A mesma seed sempre gera as mesmas trocas.
+- Aleatório por NPC: cada NPC que aparece ganha um comportamento sorteado.
+- Escolha se inimigos, moradores da cidade e bichinhos são afetados.
+- 34 estilos de IA do jogo e 50 IAs adicionais criadas para o mod, cada uma com liga/desliga. Uma IA desligada é trocada pelo próximo sorteio da seed.
+- Uma IA emprestada traz os ataques junto. As IAs atiradoras do mod só atiram em NPCs hostis.
+- Chefes, minhocas e inimigos de invasão mantêm a própria IA.
+- Equipamento de terra: Espada de Terra (5 blocos de terra) e Capacete, Peitoral e Calças de Terra (15, 25 e 18 blocos de terra, na Bancada de Trabalho).
