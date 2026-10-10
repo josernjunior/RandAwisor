@@ -18,6 +18,9 @@ namespace RandAwisor.Common.AIRandomizer
 
 		// See BehaviorPool for the encoding; 0 means the NPC's own AI.
 		private int behavior;
+		// This NPC's draw from the seed in RandomPerNPC mode (see BehaviorPool.SeededBehavior); 0 until it needs one.
+		// The only thing saved: the behavior itself is always recomputed from the seed, type and roll.
+		private int roll;
 		// Mode and BehaviorPool.Generation the current behavior was picked for, so config changes re-pick it.
 		private RandomizerMode? pickedMode;
 		private int pickedGeneration;
@@ -59,25 +62,17 @@ namespace RandAwisor.Common.AIRandomizer
 			}
 			pickedMode = config.AIMode;
 			pickedGeneration = BehaviorPool.Generation;
-			int picked = config.AIMode == RandomizerMode.ShuffleByType
-				? BehaviorPool.ShuffledBehavior(npc.type)
-				: BehaviorPool.RandomBehavior(npc.type);
+			if (config.AIMode == RandomizerMode.RandomPerNPC && roll == 0) {
+				roll = BehaviorPool.NextRoll();
+			}
+			int picked = BehaviorPool.SeededBehavior(npc.type, config.AIMode == RandomizerMode.RandomPerNPC ? roll : 0);
 			SetBehavior(npc, picked);
 		}
 
+		// Picks are a pure function of the seed, config, type and roll, so re-picking after any change is safe:
+		// NPCs whose result didn't change keep their state (SetBehavior ignores the same value).
 		private bool NeedsPick(RandomizerConfig config) {
-			if (pickedMode != config.AIMode) {
-				return true;
-			}
-			// A new seed or toggle can change the shuffle mapping; NPCs whose result is unchanged keep their state.
-			if (config.AIMode == RandomizerMode.ShuffleByType) {
-				return pickedGeneration != BehaviorPool.Generation;
-			}
-			// Random mode only re-rolls NPCs whose behavior was just disabled, or that found nothing enabled last time.
-			if (behavior == 0) {
-				return pickedGeneration != BehaviorPool.Generation;
-			}
-			return !BehaviorPool.IsEnabled(behavior);
+			return pickedMode != config.AIMode || pickedGeneration != BehaviorPool.Generation;
 		}
 
 		private void SetBehavior(NPC npc, int value) {
@@ -146,6 +141,18 @@ namespace RandAwisor.Common.AIRandomizer
 			npc.rotation = 0f;
 			npc.alpha = own.alpha;
 			physicsOf = newBehavior;
+		}
+
+		// Town NPCs (and other NPCs the game saves) keep their roll, so after reloading the world they get the same
+		// behavior from the same seed. ShuffleByType needs nothing saved: its pick depends only on the seed and type.
+		public override void SaveData(NPC npc, TagCompound tag) {
+			if (roll > 0) {
+				tag["Roll"] = roll;
+			}
+		}
+
+		public override void LoadData(NPC npc, TagCompound tag) {
+			roll = tag.GetInt("Roll");
 		}
 
 		public override void SendExtraAI(NPC npc, BitWriter bitWriter, BinaryWriter binaryWriter) {

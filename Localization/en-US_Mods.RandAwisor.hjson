@@ -39,7 +39,7 @@ Configs: {
 				'''
 				Off: every NPC keeps its own AI.
 				Shuffle by type: each NPC type always behaves like one other NPC type (fixed by the seed).
-				Random per NPC: each NPC that spawns gets a random behavior.
+				Random per NPC: each NPC that spawns gets its own draw from the seed. Town NPCs keep theirs when the world is reloaded.
 				'''
 		}
 
@@ -47,8 +47,8 @@ Configs: {
 			Label: Seed
 			Tooltip:
 				'''
-				Number (or any text) that decides who behaves like whom in Shuffle by type.
-				The same seed always produces the same swaps. Leave it empty to use the world's seed.
+				Number (or any text) that decides every behavior the randomizer hands out, in both modes.
+				The same seed always gives the same results. Numbers too big for an integer are wrapped into range. Leave it empty to use the world's seed.
 				'''
 		}
 

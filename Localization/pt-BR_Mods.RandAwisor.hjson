@@ -39,7 +39,7 @@ Configs: {
 				'''
 				Desligado: todo NPC mantém a própria IA.
 				Trocar por tipo: cada tipo de NPC sempre age como outro tipo de NPC (fixo pela seed).
-				Aleatório por NPC: cada NPC que aparece ganha um comportamento aleatório.
+				Aleatório por NPC: cada NPC que aparece ganha o próprio sorteio da seed. Os moradores mantêm o deles ao recarregar o mundo.
 				'''
 		}
 
@@ -47,8 +47,8 @@ Configs: {
 			Label: Seed
 			Tooltip:
 				'''
-				Número (ou qualquer texto) que decide quem age como quem no modo Trocar por tipo.
-				A mesma seed sempre gera as mesmas trocas. Deixe vazio para usar a seed do mundo.
+				Número (ou qualquer texto) que decide todos os comportamentos sorteados, nos dois modos.
+				A mesma seed sempre gera os mesmos resultados. Números grandes demais para um inteiro são convertidos para dentro do limite. Deixe vazio para usar a seed do mundo.
 				'''
 		}
 

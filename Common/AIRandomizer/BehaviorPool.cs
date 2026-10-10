@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using RandAwisor.Common.AIRandomizer.CustomAIs;
 using RandAwisor.Common.Configs;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Terraria.Utilities;
 
 namespace RandAwisor.Common.AIRandomizer
@@ -41,6 +44,7 @@ namespace RandAwisor.Common.AIRandomizer
 		private static readonly SortedDictionary<int, List<int>> typesByStyle = new();
 		// Sorted by name once content is loaded, so indices (synced to clients and used by seeds) are stable.
 		private static readonly List<CustomAI> customAIs = new();
+		// Per-type picks for roll 0 (ShuffleByType), cached because every NPC of a type asks for the same one.
 		private static readonly Dictionary<int, int> shuffledBehaviors = new();
 		// Behaviors that threw; never handed out again this session.
 		private static readonly HashSet<int> brokenBehaviors = new();
@@ -49,6 +53,8 @@ namespace RandAwisor.Common.AIRandomizer
 		private static int customAIChance;
 		private static string seedText = "";
 		private static int worldSeed;
+		// Last roll handed out in this world (see SeededBehavior); saved with the world.
+		private static int lastRoll;
 
 		// Bumped whenever the shuffle mapping may have changed, so NPCs know to pick again.
 		internal static int Generation;
@@ -112,15 +118,34 @@ namespace RandAwisor.Common.AIRandomizer
 			InvalidateShuffle();
 		}
 
-		public static int ShuffledBehavior(int type) {
-			if (!shuffledBehaviors.TryGetValue(type, out int behavior)) {
-				behavior = Pick(type, new UnifiedRandom(unchecked(ResolveSeed() * 486187739 + type)));
+		// Every behavior comes from the config seed, the NPC type and a roll. Roll 0 is ShuffleByType: one pick per
+		// type. RandomPerNPC gives each NPC its own roll from NextRoll, so each NPC gets its own draw from the same
+		// seed. NPCs only need to save their roll: the behavior is recomputed from it, and follows seed changes.
+		public static int SeededBehavior(int type, int roll) {
+			if (roll == 0 && shuffledBehaviors.TryGetValue(type, out int cached)) {
+				return cached;
+			}
+			int behavior = Pick(type, new UnifiedRandom(Mix(Mix(Mix(ResolveSeed()) ^ type) ^ roll)));
+			if (roll == 0) {
 				shuffledBehaviors[type] = behavior;
 			}
 			return behavior;
 		}
 
-		public static int RandomBehavior(int type) => Pick(type, Main.rand);
+		// Server only.
+		public static int NextRoll() => ++lastRoll;
+
+		// MurmurHash3's finalizer. UnifiedRandom gives nearly the same first draws for seeds that differ by 1
+		// (neighboring NPC types used to alternate between vanilla and additional AIs), so seeds are scrambled first.
+		private static int Mix(int value) {
+			uint h = unchecked((uint)value);
+			h ^= h >> 16;
+			h = unchecked(h * 0x85ebca6b);
+			h ^= h >> 13;
+			h = unchecked(h * 0xc2b2ae35);
+			h ^= h >> 16;
+			return unchecked((int)h);
+		}
 
 		public static void MarkBroken(int behavior) {
 			brokenBehaviors.Add(behavior);
@@ -132,13 +157,18 @@ namespace RandAwisor.Common.AIRandomizer
 			Generation++;
 		}
 
-		// A number is used as is; any other text is hashed. Empty falls back to the world's seed.
+		// Empty falls back to the world's seed. A number that fits in an int is used as is; a bigger one, of any
+		// length, wraps into 0..int.MaxValue. Any other text is hashed.
 		private static int ResolveSeed() {
 			if (seedText.Length == 0) {
 				return worldSeed;
 			}
-			if (int.TryParse(seedText, out int number)) {
-				return number;
+			if (BigInteger.TryParse(seedText, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out BigInteger number)) {
+				if (number >= int.MinValue && number <= int.MaxValue) {
+					return (int)number;
+				}
+				var range = new BigInteger(int.MaxValue) + 1;
+				return (int)(((number % range) + range) % range);
 			}
 			// FNV-1a, because string.GetHashCode changes every time the game starts.
 			uint hash = 2166136261;
@@ -216,6 +246,21 @@ namespace RandAwisor.Common.AIRandomizer
 		public override void OnWorldLoad() {
 			worldSeed = Main.ActiveWorldFileData.Seed;
 			InvalidateShuffle();
+			Mod.Logger.Info($"AI randomizer seed: {ResolveSeed()} (from \"{(seedText.Length > 0 ? seedText : "world seed")}\")");
+		}
+
+		public override void ClearWorld() {
+			lastRoll = 0;
+		}
+
+		public override void SaveWorldData(TagCompound tag) {
+			if (lastRoll > 0) {
+				tag["LastRoll"] = lastRoll;
+			}
+		}
+
+		public override void LoadWorldData(TagCompound tag) {
+			lastRoll = tag.GetInt("LastRoll");
 		}
 
 		public override void OnWorldUnload() {
