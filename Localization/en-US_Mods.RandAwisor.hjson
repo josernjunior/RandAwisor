@@ -22,3 +22,251 @@ Items: {
 		Tooltip: Made from 100% organic dirt.
 	}
 }
+
+Configs: {
+	RandomizerConfig: {
+		DisplayName: AI Randomizer
+
+		Headers: {
+			Behavior: NPC behavior
+			AIStyles: AI styles
+		}
+
+		AIMode: {
+			Label: Mode
+			Tooltip:
+				'''
+				Off: every NPC keeps its own AI.
+				Shuffle by type: each NPC type always behaves like one other NPC type (fixed by the seed).
+				Random per NPC: each NPC that spawns gets a random behavior.
+				'''
+		}
+
+		Seed: {
+			Label: Seed
+			Tooltip:
+				'''
+				Number (or any text) that decides who behaves like whom in Shuffle by type.
+				The same seed always produces the same swaps. Leave it empty to use the world's seed.
+				'''
+		}
+
+		AffectHostiles: {
+			Label: Randomize enemies
+			Tooltip: ""
+		}
+
+		AffectTownNPCs: {
+			Label: Randomize town NPCs
+			Tooltip: The Guide, the Merchant and the other town NPCs.
+		}
+
+		AffectCritters: {
+			Label: Randomize critters
+			Tooltip: Bunnies, birds, butterflies and the like.
+		}
+
+		AIStyles: {
+			Label: Enabled AI styles
+			Tooltip: A disabled AI is never handed out; an NPC that would get it takes the seed's next draw instead.
+		}
+	}
+
+	AIStyleToggles: {
+		Tooltip: ""
+
+		Headers: {
+			Enemies: Enemy AIs
+			CrittersAndTown: Critter and town AIs
+		}
+
+		Slime: {
+			Label: Slime (hops)
+			Tooltip: ""
+		}
+
+		DemonEye: {
+			Label: Demon Eye (flies and rams)
+			Tooltip: ""
+		}
+
+		Fighter: {
+			Label: Fighter (zombies, skeletons)
+			Tooltip: ""
+		}
+
+		Flying: {
+			Label: Flying (Eaters of Souls)
+			Tooltip: ""
+		}
+
+		Caster: {
+			Label: Caster (teleports and casts spells)
+			Tooltip: ""
+		}
+
+		CursedSkull: {
+			Label: Cursed Skull
+			Tooltip: ""
+		}
+
+		Bat: {
+			Label: Bat (bats, harpies, demons)
+			Tooltip: ""
+		}
+
+		Piranha: {
+			Label: Swimmer (piranhas, sharks)
+			Tooltip: ""
+		}
+
+		Vulture: {
+			Label: Vulture (vultures, ravens)
+			Tooltip: ""
+		}
+
+		Jellyfish: {
+			Label: Jellyfish (jellyfish, squids)
+			Tooltip: ""
+		}
+
+		Antlion: {
+			Label: Antlion (stays put and spits sand)
+			Tooltip: ""
+		}
+
+		HoveringFighter: {
+			Label: Hovering (wraiths, ghosts)
+			Tooltip: ""
+		}
+
+		EnchantedSword: {
+			Label: Enchanted weapon (Enchanted Sword, Crimson Axe)
+			Tooltip: ""
+		}
+
+		Mimic: {
+			Label: Mimic
+			Tooltip: ""
+		}
+
+		Unicorn: {
+			Label: Charger (unicorns, wolves, hellhounds)
+			Tooltip: ""
+		}
+
+		Snowman: {
+			Label: Snowman (shoots from range)
+			Tooltip: ""
+		}
+
+		GiantTortoise: {
+			Label: Giant Tortoise (rolls and leaps)
+			Tooltip: ""
+		}
+
+		Herpling: {
+			Label: Herpling (huge leaps)
+			Tooltip: ""
+		}
+
+		FlyingFish: {
+			Label: Flying Fish (swarmers)
+			Tooltip: ""
+		}
+
+		AngryNimbus: {
+			Label: Angry Nimbus (rains on you)
+			Tooltip: ""
+		}
+
+		DungeonSpirit: {
+			Label: Dungeon Spirit (passes through walls)
+			Tooltip: ""
+		}
+
+		GraniteElemental: {
+			Label: Granite Elemental
+			Tooltip: ""
+		}
+
+		SandShark: {
+			Label: Sand Shark (swims through sand)
+			Tooltip: ""
+		}
+
+		Passive: {
+			Label: Passive (town NPCs, bunnies)
+			Tooltip: ""
+		}
+
+		Bird: {
+			Label: Bird
+			Tooltip: ""
+		}
+
+		Firefly: {
+			Label: Firefly
+			Tooltip: ""
+		}
+
+		Butterfly: {
+			Label: Butterfly
+			Tooltip: ""
+		}
+
+		CritterWorm: {
+			Label: Worm (critter)
+			Tooltip: ""
+		}
+
+		Snail: {
+			Label: Snail
+			Tooltip: ""
+		}
+
+		Duck: {
+			Label: Duck (paddles on water)
+			Tooltip: ""
+		}
+
+		Dragonfly: {
+			Label: Dragonfly
+			Tooltip: ""
+		}
+
+		Ladybug: {
+			Label: Ladybug
+			Tooltip: ""
+		}
+
+		WaterStrider: {
+			Label: Water Strider (walks on water)
+			Tooltip: ""
+		}
+
+		Seahorse: {
+			Label: Seahorse
+			Tooltip: ""
+		}
+	}
+
+	RandomizerMode: {
+		Tooltip: ""
+
+		Off: {
+			Label: Off
+			Tooltip: ""
+		}
+
+		ShuffleByType: {
+			Label: Shuffle by type
+			Tooltip: ""
+		}
+
+		RandomPerNPC: {
+			Label: Random per NPC
+			Tooltip: ""
+		}
+	}
+}

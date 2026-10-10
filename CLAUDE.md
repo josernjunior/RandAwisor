@@ -19,6 +19,23 @@ RandAwisor ("Randomizer Awisor") is a Terraria mod built on tModLoader (C#, .NET
 - **Localization:** `Localization/en-US_Mods.RandAwisor.hjson` gets entries for new content added to it automatically after a build and reload in game. Edit the values tModLoader generates there instead of hardcoding display names or tooltips in C#.
 - **Ignored files:** `bin/` and `obj/` are build output and are listed in `.gitignore`.
 
+## AI randomizer
+
+This is the mod's main feature. Each vanilla NPC runs another vanilla NPC's AI instead of its own. It lives in `Common/AIRandomizer/` and is configured by `Common/Configs/RandomizerConfig.cs`, a server-side `ModConfig` with:
+- three modes (Off / ShuffleByType / RandomPerNPC);
+- a seed field (text; empty means the world seed; non-numeric text is hashed with FNV-1a because `string.GetHashCode` changes every launch);
+- a toggle each for enemies, town NPCs and critters;
+- a subpage of per-AI-style toggles (`AIStyleToggles`).
+
+- **How the swap works:** `BehaviorSwapGlobalNPC.PreAI` sets `npc.type` and `npc.aiStyle` to the borrowed NPC's values, calls `npc.VanillaAI()`, restores them, and returns false. This is the same mechanism `ModNPC.AIType` uses. Because of it, the borrowed AI's type-specific code runs too, including its projectiles and attacks, but stats, sprite, loot and chat stay the NPC's own. `noGravity` and `noTileCollide` come from `SetDefaults`, not from the AI, so they are copied from the borrowed type separately.
+- **Who picks the behavior:** the server or single player picks it, in `OnSpawn` (and lazily in `PreAI` for town NPCs loaded from the save), and syncs it to clients through `SendExtraAI`/`ReceiveExtraAI`. Clients never pick. ShuffleByType seeds the pick from the world seed plus the NPC type, so the mapping is stable per world.
+- **Which NPCs take part:** `BehaviorPool.IsEligible` decides which NPCs can lend or borrow a behavior. It excludes bosses, Old One's Army NPCs and `ExcludedTypes`.
+- **Swappable styles:** the bool fields of `AIStyleToggles` are the one list of swappable AI styles. Each field must be named exactly like its `NPCAIStyleID` constant, because `BehaviorPool` maps fields to style IDs by reflection and throws at load if a name doesn't match. To add a style, add a field and its labels in both `.hjson` files. First make sure the style's AI does not depend on a parent NPC, body segments, a tile anchor or values set by whatever spawned it.
+- **How a pick works:** every draw picks a style other than the NPC's own, then an NPC of that style. A disabled style or broken behavior moves on to the next draw from the same RNG, so toggling one style only changes the NPCs that had drawn it. Config changes bump `BehaviorPool.Generation`, and NPCs re-pick when their generation is stale.
+- **Safety nets:**
+  - While a borrowed AI runs, a detour on `On_NPC.Transform` blocks transformations, so the Guide can't turn into a Lihzahrd Crawler.
+  - An exception inside a borrowed AI is logged, and that behavior is banned for the rest of the session.
+
 ## ExampleMod reference
 
 The official tModLoader ExampleMod (a Steam Workshop download) is kept in this folder as reference material. When you need to see how a tModLoader API is used, look it up here before guessing.

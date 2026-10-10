@@ -22,3 +22,251 @@ Items: {
 		Tooltip: Feita de terra 100% orgânica.
 	}
 }
+
+Configs: {
+	RandomizerConfig: {
+		DisplayName: Randomizador de IA
+
+		Headers: {
+			Behavior: Comportamento dos NPCs
+			AIStyles: Estilos de IA
+		}
+
+		AIMode: {
+			Label: Modo
+			Tooltip:
+				'''
+				Desligado: todo NPC mantém a própria IA.
+				Trocar por tipo: cada tipo de NPC sempre age como outro tipo de NPC (fixo pela seed).
+				Aleatório por NPC: cada NPC que aparece ganha um comportamento aleatório.
+				'''
+		}
+
+		Seed: {
+			Label: Seed
+			Tooltip:
+				'''
+				Número (ou qualquer texto) que decide quem age como quem no modo Trocar por tipo.
+				A mesma seed sempre gera as mesmas trocas. Deixe vazio para usar a seed do mundo.
+				'''
+		}
+
+		AffectHostiles: {
+			Label: Aleatorizar inimigos
+			Tooltip: ""
+		}
+
+		AffectTownNPCs: {
+			Label: Aleatorizar NPCs da cidade
+			Tooltip: O Guia, o Mercador e os outros moradores.
+		}
+
+		AffectCritters: {
+			Label: Aleatorizar bichinhos
+			Tooltip: Coelhos, pássaros, borboletas e afins.
+		}
+
+		AIStyles: {
+			Label: IAs ativadas
+			Tooltip: Uma IA desativada nunca é sorteada; o NPC que a receberia fica com o próximo sorteio da seed.
+		}
+	}
+
+	AIStyleToggles: {
+		Tooltip: ""
+
+		Headers: {
+			Enemies: IAs de inimigos
+			CrittersAndTown: IAs de bichinhos e da cidade
+		}
+
+		Slime: {
+			Label: Slime (pula)
+			Tooltip: ""
+		}
+
+		DemonEye: {
+			Label: Olho Demoníaco (voa e investe)
+			Tooltip: ""
+		}
+
+		Fighter: {
+			Label: Lutador (zumbis, esqueletos)
+			Tooltip: ""
+		}
+
+		Flying: {
+			Label: Voador (Devoradores de Almas)
+			Tooltip: ""
+		}
+
+		Caster: {
+			Label: Conjurador (teleporta e lança magias)
+			Tooltip: ""
+		}
+
+		CursedSkull: {
+			Label: Caveira Amaldiçoada
+			Tooltip: ""
+		}
+
+		Bat: {
+			Label: Morcego (morcegos, harpias, demônios)
+			Tooltip: ""
+		}
+
+		Piranha: {
+			Label: Nadador (piranhas, tubarões)
+			Tooltip: ""
+		}
+
+		Vulture: {
+			Label: Abutre (abutres, corvos)
+			Tooltip: ""
+		}
+
+		Jellyfish: {
+			Label: Água-viva (águas-vivas, lulas)
+			Tooltip: ""
+		}
+
+		Antlion: {
+			Label: Formiga-leão (fica parada e cospe areia)
+			Tooltip: ""
+		}
+
+		HoveringFighter: {
+			Label: Flutuante (espectros, fantasmas)
+			Tooltip: ""
+		}
+
+		EnchantedSword: {
+			Label: Arma encantada (Espada Encantada, Machado Carmesim)
+			Tooltip: ""
+		}
+
+		Mimic: {
+			Label: Mímico
+			Tooltip: ""
+		}
+
+		Unicorn: {
+			Label: Corredor (unicórnios, lobos, cães infernais)
+			Tooltip: ""
+		}
+
+		Snowman: {
+			Label: Boneco de neve (atira de longe)
+			Tooltip: ""
+		}
+
+		GiantTortoise: {
+			Label: Tartaruga gigante (rola e salta)
+			Tooltip: ""
+		}
+
+		Herpling: {
+			Label: Herpling (saltos enormes)
+			Tooltip: ""
+		}
+
+		FlyingFish: {
+			Label: Peixe voador (enxames)
+			Tooltip: ""
+		}
+
+		AngryNimbus: {
+			Label: Nuvem Raivosa (chove em você)
+			Tooltip: ""
+		}
+
+		DungeonSpirit: {
+			Label: Espírito do Calabouço (atravessa paredes)
+			Tooltip: ""
+		}
+
+		GraniteElemental: {
+			Label: Elemental de Granito
+			Tooltip: ""
+		}
+
+		SandShark: {
+			Label: Tubarão de areia (nada na areia)
+			Tooltip: ""
+		}
+
+		Passive: {
+			Label: Passivo (moradores, coelhos)
+			Tooltip: ""
+		}
+
+		Bird: {
+			Label: Pássaro
+			Tooltip: ""
+		}
+
+		Firefly: {
+			Label: Vaga-lume
+			Tooltip: ""
+		}
+
+		Butterfly: {
+			Label: Borboleta
+			Tooltip: ""
+		}
+
+		CritterWorm: {
+			Label: Minhoca (bichinho)
+			Tooltip: ""
+		}
+
+		Snail: {
+			Label: Caracol
+			Tooltip: ""
+		}
+
+		Duck: {
+			Label: Pato (nada na superfície)
+			Tooltip: ""
+		}
+
+		Dragonfly: {
+			Label: Libélula
+			Tooltip: ""
+		}
+
+		Ladybug: {
+			Label: Joaninha
+			Tooltip: ""
+		}
+
+		WaterStrider: {
+			Label: Gerrídeo (anda sobre a água)
+			Tooltip: ""
+		}
+
+		Seahorse: {
+			Label: Cavalo-marinho
+			Tooltip: ""
+		}
+	}
+
+	RandomizerMode: {
+		Tooltip: ""
+
+		Off: {
+			Label: Desligado
+			Tooltip: ""
+		}
+
+		ShuffleByType: {
+			Label: Trocar por tipo
+			Tooltip: ""
+		}
+
+		RandomPerNPC: {
+			Label: Aleatório por NPC
+			Tooltip: ""
+		}
+	}
+}
